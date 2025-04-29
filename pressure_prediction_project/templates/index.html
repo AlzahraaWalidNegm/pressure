@@ -1,0 +1,174 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>pressure</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Arial, sans-serif;
+            background-color: #f5f7fa;
+            margin: 0;
+            padding: 20px;
+            color: #2c3e50;
+            max-width: 500px;
+            margin: 0 auto;
+        }
+        .form-container {
+            background: white;
+            padding: 25px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        h1 {
+            text-align: center;
+            margin-bottom: 25px;
+            font-weight: 600;
+        }
+        .form-group {
+            margin-bottom: 20px;
+        }
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+        }
+        .input-field {
+            width: 100%;
+            padding: 12px 15px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            font-size: 16px;
+        }
+        .radio-group {
+            display: flex;
+            gap: 15px;
+            margin-top: 10px;
+        }
+        .radio-option {
+            display: flex;
+            align-items: center;
+        }
+        .radio-option input {
+            margin-right: 8px;
+        }
+        .reference-range {
+            font-size: 0.9em;
+            color: #7f8c8d;
+            margin-top: 5px;
+        }
+        .input-description {
+            font-size: 0.9em;
+            color: #7f8c8d;
+            margin-top: 5px;
+            font-style: italic;
+        }
+        .submit-btn {
+            width: 100%;
+            padding: 14px;
+            background: #3498db;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-size: 16px;
+            margin-top: 20px;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        .submit-btn:hover {
+            background: #2980b9;
+        }
+    </style>
+</head>
+<body>
+    <div class="form-container">
+        <h1>pressure</h1>
+        <form method="POST" action="/predict">
+            <div class="form-group">
+                <label for="hemoglobin">Level of Hemoglobin <span class="reference-range">(g/dL)</span></label>
+                <input type="number" id="hemoglobin" name="hemoglobin" class="input-field" step="0.1" min="0" max="30" required>
+                <div class="reference-range">Normal range: 12-16 (F), 13.5-17.5 (M)</div>
+            </div>
+            <div class="form-group">
+                <label for="age">Age</label>
+                <input type="number" id="age" name="age" class="input-field" min="0" max="120" required>
+            </div>
+            <div class="form-group">
+                <label for="bmi">Body Mass Index (BMI)</label>
+                <input type="number" id="bmi" name="bmi" class="input-field" step="1" min="10" max="50" required>
+                <div class="reference-range">Normal range: 18.5 - 24.9 (kg/m2)</div>
+            </div>
+            <div class="form-group">
+                <label>Gender</label>
+                <div class="radio-group">
+                    <div class="radio-option">
+                        <input type="radio" id="male" name="gender" value="male" required>
+                        <label for="male">Male</label>
+                    </div>
+                    <div class="radio-option">
+                        <input type="radio" id="female" name="gender" value="female">
+                        <label for="female">Female</label>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <label>Do you smoke?</label>
+                <div class="radio-group">
+                    <div class="radio-option">
+                        <input type="radio" id="smoking-yes" name="smoking" value="yes" required>
+                        <label for="smoking-yes">Yes</label>
+                    </div>
+                    <div class="radio-option">
+                        <input type="radio" id="smoking-no" name="smoking" value="no">
+                        <label for="smoking-no">No</label>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="activity">Physical Activity <span class="reference-range">(Step Count)</span></label>
+                <input type="number" id="activity" name="activity" class="input-field" min="0" max="100000" step="1" required>
+                <div class="input-description">Enter total number of steps per week</div>
+            </div>
+            <div class="form-group">
+                <label for="salt">salt_content_in_the_diet <span class="reference-range">(grams per day)</span></label>
+                <input type="number" id="salt)" name="salt" class="input-field" min="0" max="50" step="0.1" required>
+                <div class="input-description">WHO recommends less than 5g per day</div>
+            </div>
+            <div class="form-group">
+                <label>Chronic Kidney Disease?</label>
+                <div class="radio-group">
+                    <div class="radio-option">
+                        <input type="radio" id="kidney-yes" name="kidney" value="yes" required>
+                        <label for="kidney-yes">Yes</label>
+                    </div>
+                    <div class="radio-option">
+                        <input type="radio" id="kidney-no" name="kidney" value="no">
+                        <label for="kidney-no">No</label>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <label>Adrenal or Thyroid Disorders?</label>
+                <div class="radio-group">
+                    <div class="radio-option">
+                        <input type="radio" id="disorders-yes" name="disorders" value="yes" required>
+                        <label for="disorders-yes">Yes</label>
+                    </div>
+                    <div class="radio-option">
+                        <input type="radio" id="disorders-no" name="disorders" value="no">
+                        <label for="disorders-no">No</label>
+                    </div>
+                </div>
+            </div>
+            <button type="submit" class="submit-btn">Submit Assessment</button>
+        </form>
+
+        {% if result %}
+        <div style="margin-top: 20px; text-align: center; font-weight: bold; font-size: 18px;">
+            {{ result }}
+        </div>
+        {% endif %}
+    </div>
+</body>
+</html>
